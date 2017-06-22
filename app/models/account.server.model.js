@@ -17,8 +17,8 @@ var AccountSchema = new Schema({
 	username: {
 		type: String,
 		trim: true,
-		required: 'username cannot be blank',
-		unique: true
+		index: { unique: true },
+		required: 'username cannot be blank'
 	},
 	password: {
 		type: String,
