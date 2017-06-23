@@ -6,5 +6,6 @@ angular.module('account').run(['Menus',
 		// Set top bar menu items
 		Menus.addMenuItem('topbar', 'Accounts', 'accounts', 'dropdown', '/account(/create)?');
 		Menus.addSubMenuItem('topbar', 'accounts', 'List all members', 'account/view');
+		Menus.addSubMenuItem('topbar', 'accounts', 'Register', 'account/create');
 	}
 ]);

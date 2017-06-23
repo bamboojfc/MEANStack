@@ -9,7 +9,7 @@ module.exports = function(app) {
 		.delete(accounts.delete)
 		.put(accounts.update);
 
-	app.route('register')
+	app.route('/register')
 		.post(accounts.isUserExist)
 		.post(accounts.create);
 
