@@ -13,18 +13,26 @@ var mongoose = require('mongoose'),
  * Create a Account
  */
 exports.create = function(req, res) {
+    console.log('creating user..');
     var account = new Account(req.body);
     account.password = md5(account.password);
     
-    account.save(function(err, account){
-        if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json({'id':account._id,'username':account.username});
-		}
-    });
+    if(!req.account){
+        account.save(function(err, account){
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({'id':account._id,'username':account.username});
+            }
+        });
+    }else{
+        return res.status(400).send({
+            message: 'This username is already exist'
+        });
+    }
+    
 };
 
 /**
@@ -46,7 +54,17 @@ exports.update = function(req, res) {
  * Delete an Account
  */
 exports.delete = function(req, res) {
+    var account = req.account;
 
+	account.remove(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(account);
+		}
+	});
 };
 
 /**
@@ -69,7 +87,7 @@ exports.verify = function(req, res) {
     var account = new Account(req.body);
     account.password = md5(account.password);
     //console.log('comparing password : ',account.password, req.account.password);
-    if(account.password!=req.account.password){
+    if(account.password!==req.account.password){
         return res.status(400).send({
             message: 'Login failed'
         });
@@ -96,3 +114,12 @@ exports.getByUsername = function(req, res, next, username) {
     });
 };
 
+exports.isUserExist = function(req, res, next) {
+    console.log('verifying username...');
+    var account = new Account(req.body);
+    Account.findOne({'username':account.username}).exec(function(err, account) {
+        if (err) return next(err);
+        req.account = account;
+        next();
+    });
+};
