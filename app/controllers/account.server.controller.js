@@ -47,7 +47,19 @@ exports.read = function(req, res) {
  * Update a Account
  */
 exports.update = function(req, res) {
+    var account = req.account; 
 
+    account = _.extend(account, req.body);
+
+	account.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(account);
+		}
+	});
 };
 
 /**

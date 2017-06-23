@@ -6,11 +6,12 @@ module.exports = function(app) {
 	app.get('/members',accounts.list);
 	app.route('/members/:username')
 		.get(accounts.read)
-		.delete(accounts.delete);
+		.delete(accounts.delete)
+		.put(accounts.update);
 
-	app.post('/register',accounts.isUserExist);
-	
-	app.post('/register',accounts.create);
+	app.route('register')
+		.post(accounts.isUserExist)
+		.post(accounts.create);
 
 	app.post('/login/:username',accounts.verify);
 
